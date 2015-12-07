@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>注册</title>
+</head>
+<body>
+    <div id="main">
+    </div>
+    <script type="text/ractive" id="template">
+        用户名：
+        <input type="text" value="{{name}}" />
+        <br />
+        密码：
+        <input type="password" value="{{password}}" />
+        <br />
+        昵称：
+        <input type="text" value="{{displayName}}" />
+        <br />
+        <input type="button" value="登录" on-click="register" />
+    </script>
+    <script src="javascripts/lib/ractive.min.js"></script>
+    <script src="javascripts/lib/jquery-2.1.4.min.js"></script>
+    <script>
+        var ractive = new Ractive({
+            el: '#main',
+            template: '#template'
+        });
+        ractive.on({
+            register: function () {
+                var data = ractive.get();
+                $.post('/register', data).then(function () { },
+                    function () { });
+            }
+        });
+    </script>
+</body>
+</html>
