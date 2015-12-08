@@ -1,5 +1,5 @@
 ﻿var express = require('express'),
-    user = require('../user');
+    user = require('../modules/user');
 var router = express.Router();
 
 
@@ -12,16 +12,12 @@ router.get('/login', function (req, res) {
 });
 router.post('/login', function (req, res) {
     var name = req.body.name,
-        pwd = req.body.pwd;
+        pwd = req.body.password;
     
     var query = user.login(name, pwd);
-    query.then(
-        function (user) {
-            return user;
-        }, 
-        function (err) {
-            return err;
-        });
+    query.then(function (result) {
+        res.json(result);
+    });
     
 });
 
@@ -29,16 +25,11 @@ router.get('/register', function (req, res) {
     res.render('register');
 });
 router.post('/register', function (req, res) {
-    var data = req.body;   
-    var query = user.add(data);
-    query.then(
-        function (user) {
-            return user;
-        }, 
-        function (err) {
-            return err;
-        });
-    
+    var data = req.body;
+    var deffered = user.add(data);
+    deffered.then(function (result) {
+        res.json(result);
+    });
 });
 
 

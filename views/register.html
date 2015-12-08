@@ -29,8 +29,14 @@
         ractive.on({
             register: function () {
                 var data = ractive.get();
-                $.post('/register', data).then(function () { },
-                    function () { });
+                $.post('/register', data).then(
+                    function (data) {
+                        console.log('success!');
+                        console.log(data);
+                    },
+                    function (err) {
+                        console.error(err);
+                    });
             }
         });
     </script>
