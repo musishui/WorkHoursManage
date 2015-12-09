@@ -1,5 +1,6 @@
 ﻿var mongoose = require('./dbHelper.js').mongoose,
     util = require('util'),
+    Q = require('q'),
     Schema = mongoose.Schema;
 
 /**
@@ -21,38 +22,51 @@ function BaseSchema() {
             type: String
         }
     });
+    /*this.virtuals('id').get(function () {
+        return this._id;
+    }).set(function (id) {
+        this._id = id;
+    });*/
 }
 
 util.inherits(BaseSchema, Schema);
 
 function EnumSchema() {
     BaseSchema.apply(this, arguments);
-    
-    this.all = [];
-    
+    var all;
     this.add({
         name: { type: String }
     });
     
     this.post('save', function (doc) {
-        
+        all = null;
         console.log('save');
     });
     
     this.post('update', function (doc) {
+        all = null;
         console.log('update');
     });
     
     this.post('remove', function (doc) {
+        all = null;
         console.log('remove');
     });
     
-    this.static('getAll', (function () {
-        var all;
-        return function () {
-            
+    this.static('getAll', function (projection) {
+        var deferred = Q.defer();
+        if (!all) {
+            this.find({ isDel: false }, projection).then(function (doc) {
+                all = doc;
+                deferred.resolve(all);
+            }, function (err) {
+                deferred.resolve(err);
+            });
+        } else {
+            deferred.resolve(all);
         }
-    }));
+        return deferred.promise;
+    });
 }
 
 util.inherits(EnumSchema, BaseSchema);
@@ -83,6 +97,11 @@ var Team = new EnumSchema(),
         _id: {
             type: Number,
             unique: true
+        },
+        // 是否计入工时
+        isWork: {
+            type: Boolean,
+            default: true
         }
     }),
     WorkItem = new BaseSchema({
