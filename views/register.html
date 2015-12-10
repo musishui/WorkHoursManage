@@ -1,44 +1,26 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html ng-app="app">
 <head>
     <meta charset="utf-8" />
     <title>注册</title>
 </head>
 <body>
-    <div id="main">
-    </div>
-    <script type="text/ractive" id="template">
+    <div id="main" ng-controller="registerController">
         用户名：
-        <input type="text" value="{{name}}" />
+        <input type="text" ng-model="user.name" />
         <br />
         密码：
-        <input type="password" value="{{password}}" />
+        <input type="password" ng-model="user.password" />
         <br />
         昵称：
-        <input type="text" value="{{displayName}}" />
+        <input type="text" ng-model="user.displayName" />
         <br />
-        <input type="button" value="登录" on-click="register" />
-    </script>
-    <script src="javascripts/lib/ractive.min.js"></script>
-    <script src="javascripts/lib/jquery-2.1.4.min.js"></script>
-    <script>
-        var ractive = new Ractive({
-            el: '#main',
-            template: '#template'
-        });
-        ractive.on({
-            register: function () {
-                var data = ractive.get();
-                $.post('/register', data).then(
-                    function (data) {
-                        console.log('success!');
-                        console.log(data);
-                    },
-                    function (err) {
-                        console.error(err);
-                    });
-            }
-        });
-    </script>
+        <input type="button" value="登录" ng-click="register()" />
+        {{result}}
+    </div>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.5.0-beta.0/angular.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.5.0-beta.0/angular-resource.min.js"></script>
+    <script src="javascripts/services.js"></script>
+    <script src="javascripts/controller/register.js"></script>
 </body>
 </html>

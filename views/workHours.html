@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html ng-app>
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container" ng-controller="workHoursController">
         <div class="row">
             <div class="col-md-6">
                 <h2>今日工作</h2>
                 <hr />
                 请填写工作内容
-                <ul>
-                    <li>1、 终端pc 不该习惯 (50%) -8</li>
-                </ul>
+                <ol>
+                    <li> 终端pc 不该习惯 (50%) -8</li>
+                    <li> 终端pc 不该习惯 (50%) -8</li>
+                    <li> 终端pc 不该习惯 (50%) -8</li>
+                </ol>
                 <hr />
                 <form class="form-horizontal">
                     <div class="form-group">
@@ -59,35 +61,6 @@
                             <button type="button" class="btn btn-danger">取 消</button>
                         </div>
                     </div>
-                    <!--
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                            <select class="form-control" placeholder="项目">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="number" class="form-control" aria-label="工时(H)" placeholder="工时(H)">
-                                <span class="input-group-addon">H</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="number" class="form-control" aria-label="进度%" placeholder="进度%">
-                                <span class="input-group-addon">%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="inputPassword3" placeholder="工作内容">
-                        </div>
-                    </div>-->
                 </form>
             </div>
             <div class="col-md-6">
@@ -119,5 +92,12 @@
             </div>
         </div>
     </div>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.5.0-beta.0/angular.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.5.0-beta.0/angular-messages.min.js.map"></script>
+    <script type="text/javascript">
+        var app = angular.module('app', []);
+        app.controller('workHoursController', function ($scope) {
+        });
+    </script>
 </body>
 </html>

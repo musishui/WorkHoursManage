@@ -5,15 +5,15 @@
 module.exports = {
     add: function (user) {
         var deferred = Q.defer();
-        User.create(user).then(function (doc) {
+        User.create(user).then(function () {
             deferred.resolve(true);
         }, function (err) {
-            deferred.reject(data);
+            deferred.reject(err);
         });
         return deferred.promise;
     },
-    update: function (user) {
-
+    update: function (id, user) {
+        return User.findByIdAndUpdate(id, user);
     },
     updatePwd: function (id, oldPwd, newPwd) {
 

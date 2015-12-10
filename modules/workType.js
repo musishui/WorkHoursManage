@@ -28,5 +28,11 @@ module.exports = {
      */
     remove: function (id, isLogical){
         return WorkType.remove({ _id: id });
+    },
+    /*
+     * 修改工作类型
+     */
+    update: function (workType){
+        return WorkType.update({ _id: workType._id }, workType);
     }
 }
