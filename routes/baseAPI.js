@@ -10,26 +10,26 @@ function baseAPI(app) {
         common.dealJsonResponse(res, query);
     });
     // 新增
-    router.post('/' , function () {
+    router.post('/' , function (req, res) {
         var data = req.body,
             query = app.add(data);
         common.dealJsonResponse(res, query);
     });
     // 根据ID 查询
-    router.get('/:id' , function () {
+    router.get('/:id' , function (req, res) {
         var id = req.params.id,
             query = app.findOne({ _id: id });
         common.dealJsonResponse(res, query);
     });
     // 更新
-    router.post('/:id' , function () {
+    router.post('/:id' , function (req, res) {
         var id = req.params.id,
             data = req.body,
             query = app.updateOne({ _id: id }, data);
         common.dealJsonResponse(res, query);
     });
     // 删除
-    router.delete('/:id' , function () {
+    router.delete('/:id' , function (req, res) {
         var id = req.params.id,
             query = app.removeOne({ _id: id });
         common.dealJsonResponse(res, query);

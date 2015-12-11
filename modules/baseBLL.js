@@ -1,5 +1,5 @@
 ﻿var Q = require('q'),
-    defProjection = '-isDel -createTime -__v';
+    defProjection = '-isDel -createTime -_v -v -__v';
 
 function getBaseBLL(mod, projection) {
     if (!mod) return;
@@ -7,8 +7,10 @@ function getBaseBLL(mod, projection) {
     
     return {
         add: function (doc) {
-            doc._id == null && (doc._id = doc.id);
-            delete doc.id;
+            if (doc.id != null) {
+                doc._id = doc.id;
+                delete doc.id;
+            }
             var deferred = Q.defer();
             mod.create(doc).then(function (doc) {
                 deferred.resolve(doc._doc);
