@@ -137,7 +137,26 @@ var Team = new EnumSchema(),
         status: {
             type: Number
         },
-        workItems: [WorkItem]
+        projectId: {
+            type: Schema.Types.ObjectId,
+            ref: 'project'
+        },
+        workType: {
+            type: Number,
+            ref: 'workType'
+        },
+        hours: {
+            type: Number,
+            min: 1
+        },
+        progress: {
+            type: Number,
+            min: 1,
+            max: 100
+        },
+        content: {
+            type: String
+        }
     });
 
 module.exports = {

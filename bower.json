@@ -1,0 +1,21 @@
+{
+  "name": "WorkHoursManage",
+  "description": "WorkHoursManage",
+  "main": "",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fullcalendar": "~2.5.0"
+  }
+}

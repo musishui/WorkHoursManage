@@ -11,34 +11,45 @@ function getBaseBLL(mod, projection) {
                 doc._id = doc.id;
                 delete doc.id;
             }
-            var deferred = Q.defer();
-            mod.create(doc).then(function (doc) {
-                deferred.resolve(doc._doc);
-            }, function (err) {
-                deferred.reject(err);
-            });
-            return deferred.promise;
+            var query = mod.create(doc);
+            return dealQuery(query);
         },
         remove: function (conditions, isLogical) {
-            return mod.remove(conditions);
+            var query = mod.remove(conditions);
+            return dealQuery(query);
         },
         removeOne: function (conditions, isLogical) {
-            return mod.findOneAndRemove(conditions);
+            var query = mod.findOneAndRemove(conditions);
+            return dealQuery(query);
         },
         update: function (conditions, doc) {
-            return mod.update(conditions, { $set: doc });
+            var query = mod.update(conditions, { $set: doc });
+            return dealQuery(query);
         },
         updateOne: function (conditions, doc) {
-            return mod.findOneAndUpdate(conditions, { $set: doc });
+            var query = mod.findOneAndUpdate(conditions, { $set: doc });
+            return dealQuery(query);
         },
         find: function (conditions, projection) {
-            return mod.find(conditions, getProjection(projection, defProjection));
+            var query = mod.find(conditions, getProjection(projection, defProjection));
+            return dealQuery(query);
         },
         findOne: function (conditions, projection) {
-            return mod.findOne(conditions, getProjection(projection, defProjection));
+            var query = mod.findOne(conditions, getProjection(projection, defProjection));
+            return dealQuery(query);
         }
     }
     
+    function dealQuery(query){
+        var deferred = Q.defer();
+        query.then(function (doc) {
+            deferred.resolve(doc?doc._doc:null);
+        }, function (err) {
+            deferred.reject(err);
+        });
+        return deferred.promise;
+    }
+
     function getProjection(projection, def) {
         return projection == null?def:projection;
     }

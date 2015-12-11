@@ -2,15 +2,297 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>主要</title>
+    <title>我的日历</title>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <script src='/lib/moment/min/moment.min.js'></script>
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src='/lib/fullcalendar/dist/fullcalendar.min.js'></script>
+    <script src='/lib/fullcalendar/dist/lang-all.js'></script>
+    <script src='/lib/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script>
+        var data = [
+                            {
+                                title: 'All Day Event',
+                                start: '2015-12-01'
+                            },
+                            {
+                                title: 'Long Event',
+                                start: '2015-12-07',
+                                end: '2015-12-10'
+                            },
+                            {
+                                id: 999,
+                                title: 'Repeating Event',
+                                start: '2015-12-09T16:00:00'
+                            },
+                            {
+                                id: 999,
+                                title: 'Repeating Event',
+                                start: '2015-12-16T16:00:00'
+                            },
+                            {
+                                title: 'Conference',
+                                start: '2015-12-11',
+                                end: '2015-12-13'
+                            },
+                            {
+                                title: 'Meeting',
+                                start: '2015-12-12T10:30:00',
+                                end: '2015-12-12T12:30:00'
+                            },
+                            {
+                                title: 'Lunch',
+                                start: '2015-12-12T12:00:00'
+                            },
+                            {
+                                title: 'Meeting',
+                                start: '2015-12-12T14:30:00'
+                            },
+                            {
+                                title: 'Happy Hour',
+                                start: '2015-12-12T17:30:00'
+                            },
+                            {
+                                title: 'Dinner',
+                                start: '2015-12-12T20:00:00'
+                            },
+                            {
+                                title: 'Birthday Party',
+                                start: '2015-12-13T07:00:00'
+                            },
+                            {
+                                title: 'Click for Google',
+                                url: 'http://google.com/',
+                                start: '2015-12-28'
+                            }
+        ];
+        $(document).ready(function () {
+            var currentLangCode = 'zh-cn';
+
+            // build the language selector's options
+            $.each($.fullCalendar.langs, function (langCode) {
+                $('#lang-selector').append(
+                    $('<option/>')
+                        .attr('value', langCode)
+                        .prop('selected', langCode == currentLangCode)
+                        .text(langCode)
+                );
+            });
+
+            // rerender the calendar when the selected option changes
+            $('#lang-selector').on('change', function () {
+                if (this.value) {
+                    currentLangCode = this.value;
+                    $('#calendar').fullCalendar('destroy');
+                    renderCalendar();
+                }
+            });
+
+            function renderCalendar() {
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month' //month,basicWeek,basicDay,agendaWeek,agendaDay
+                    },
+                    defaultDate: new Date(),
+                    lang: currentLangCode,
+                    selectable: true,
+                    selectHelper: true,
+                    select: function (start, end) {
+                        var tspan = end - start;
+                        if (tspan > 1000 * 60 * 60 * 24) { return; }//暂时限制单天
+                        //新增任务
+                        showNewDialog(start, end);
+                    },
+                    buttonIcons: false, // show the prev/next text
+                    weekNumbers: true,
+                    eventClick: function (calEvent, jsEvent, view) {
+
+                        if ($(jsEvent.target).hasClass('event-cls')) {
+                            //删除
+                            $("#calendar").fullCalendar("removeEvents", calEvent._id);
+                        }
+                        else {
+                            //添加
+                            $('#exampleModal').modal('show');
+                            $('#txtName').val(calEvent.title);
+                        }
+                    },
+                    eventMouseover: function (calEvent, jsEvent, view) {
+                        var e = jsEvent;
+                        var evt = $(e.target);
+                        if (!evt.hasClass('fc-day-grid-event')) {
+                            evt = evt.parents('.fc-day-grid-event');
+                        }
+                        evt.append($('<i class="fa fa-close event-cls" >'));
+
+                    },
+                    eventMouseout: function (calEvent, jsEvent, view) {
+                        var e = jsEvent;
+                        var evt = $(e.target);
+                        if (!evt.hasClass('fc-day-grid-event')) {
+                            evt = evt.parents('.fc-day-grid-event');
+                        }
+                        evt.find(".event-cls").remove();
+                    },
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: data
+
+
+                });
+            }
+
+            renderCalendar();
+        });
+
+        var start, end;
+        function showNewDialog(_start, _end) {
+            start = _start;
+            end = _end;
+            $('#exampleModal').modal('show');
+
+        }
+
+        $(function () {
+
+
+            $('#btnOk').on("click", function () {
+                var name = $('#txtName').val();
+                var eventData;
+                eventData = {
+                    title: name,
+                    start: start,
+                    backgroundColor: $('#selType').val(),
+                    end: end
+                }
+
+                $('#calendar').fullCalendar('renderEvent', eventData, true);
+                $('#calendar').fullCalendar('unselect');
+            });
+
+
+
+        })
+
+
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            font-size: 14px;
+        }
+
+        #top {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            padding: 0 10px;
+            line-height: 40px;
+            font-size: 12px;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        .eventOver {
+            background: #b33;
+        }
+
+        .event-cls {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            text-align: center;
+            right: 0px;
+            line-height: 15px;
+            top: 0;
+            background: #c33;
+            font-size: 12px;
+            transition: all .3s;
+            z-index: 1000;
+        }
+
+            .event-cls:hover {
+                transform: rotate(90deg);
+            }
+    </style>
 </head>
 <body>
-    <div id="main" style="margin:20px; border:solid #ccc 1px; padding:5px; font:14px;">
+
+    <div id='top'>
+
+        Language:
+        <select id='lang-selector'></select>
         <a href="/register">注册</a>
         <a href="/login">登录</a>
-        <a href="/workType">工作类型</a>
-        <a href="/workHours">工时</a>
+
     </div>
-    
+
+    <div id='calendar'></div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" style="padding-right:40px;">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">项目</label>
+                            <div class="col-sm-10">
+                                <select class="form-control">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">内容</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputPassword3" placeholder="工作内容">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">工时</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" aria-label="工时(H)" placeholder="工时(H)">
+                                    <span class="input-group-addon">H</span>
+                                </div>
+                            </div>
+                            <label for="inputPassword3" class="col-sm-2 control-label">进度</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" aria-label="进度%" placeholder="进度(%)">
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="padding-right:50px;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id='btnOk' type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

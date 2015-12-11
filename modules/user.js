@@ -20,7 +20,7 @@ baseBLL.login= function (name, pwd) {
         if (doc == null) {
             deferred.reject('用户名或密码不正确', '用户名或密码不正确');
         } else {
-            deferred.resolve(doc._doc);
+            deferred.resolve(doc);
         }
     }, function (err) {
         deferred.reject(err);
