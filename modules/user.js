@@ -1,38 +1,32 @@
 ﻿var User = require('../modules/modules.js').User,
     Q = require('q'),
-    projection = 'id name displayName';
+    projection='-password -isDel -createTime',
+    baseBLL = require('./baseBLL.js')(User, projection);
 
-module.exports = {
-    add: function (user) {
-        var deferred = Q.defer();
-        User.create(user).then(function () {
-            deferred.resolve(true);
-        }, function (err) {
-            deferred.reject(err);
-        });
-        return deferred.promise;
-    },
-    update: function (id, user) {
-        return User.findByIdAndUpdate(id, user);
-    },
-    updatePwd: function (id, oldPwd, newPwd) {
-
-    },
-    findById: function (id) {
-        return User.findById(id, projection);
-    },
-    login: function (name, pwd) {
-        var deferred = Q.defer();
-        User.findOne({ name: name, password: pwd, isDel: false }, projection).then(function (doc) {
-            if (doc == null) {
-                deferred.reject('用户名或密码不正确', '用户名或密码不正确');
-            } else {
-                deferred.resolve(doc._doc);
-            }
-        }, function (err) {
-            deferred.reject(err);
-        });
-        return deferred.promise;
-    }
-
+baseBLL.updatePwd = function (id, oldPwd, newPwd) {
+    var deferred = Q.defer();
+    var query = baseBLL.updateOne({ _id: id, password: oldPwd }, { $set: { password: newPwd } });
+    query.then(function () {
+        deferred.resolve(true);
+    }, function (err) {
+        deferred.reject(err);
+    });
+    return deferred.promise;
 }
+
+baseBLL.login= function (name, pwd) {
+    var deferred = Q.defer();
+    baseBLL.findOne({ name: name, password: pwd, isDel: false }).then(function (doc) {
+        if (doc == null) {
+            deferred.reject('用户名或密码不正确', '用户名或密码不正确');
+        } else {
+            deferred.resolve(doc._doc);
+        }
+    }, function (err) {
+        deferred.reject(err);
+    });
+    return deferred.promise;
+}
+
+
+module.exports = baseBLL;

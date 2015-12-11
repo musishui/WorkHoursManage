@@ -25,7 +25,11 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/api', api);
+app.use('/api/login', api.login);
+app.use('/api/users', api.user);
+app.use('/api/projects', api.project);
+app.use('/api/worktypes', api.workType);
+app.use('/api/teams', api.team);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

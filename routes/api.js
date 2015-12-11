@@ -6,23 +6,21 @@
     project = require('../modules/project'),
     baseAPI = require('./baseAPI.js');
 
-var router = express.Router();
-
 var api = {
     login: express.Router(),
-    user: baseAPI(express.Router(), user),
-    project: baseAPI(express.Router(), project),
-    workType: baseAPI(express.Router(), workType),
-    team: baseAPI(express.Router(), team),
-    work: baseAPI(express.Router(), team),
+    user: baseAPI(user),
+    project: baseAPI(project),
+    workType: baseAPI(workType),
+    team: baseAPI(team),
+    //work: baseAPI( team),
 }
 
-api.login.get('/login', function (req, res) {
+api.login.get('/', function (req, res) {
     var name = req.query.name,
         pwd = req.query.password;
     
     var query = user.login(name, pwd);
-    dealJsonResponse(res, query);
+    common.dealJsonResponse(res, query);
 });
 
 module.exports = api;

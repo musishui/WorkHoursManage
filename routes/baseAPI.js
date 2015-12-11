@@ -1,5 +1,8 @@
-﻿var common = require('../lib/common.js');
-function baseAPI(router, app) {
+﻿var common = require('../lib/common.js'),
+    express = require('express'),
+    router = express.Router();
+
+function baseAPI(app) {
     // 查询
     router.get('/' , function (req, res) {
         var condition = req.query,
@@ -13,22 +16,22 @@ function baseAPI(router, app) {
         common.dealJsonResponse(res, query);
     });
     // 根据ID 查询
-    router.get('/:id' , function () { 
+    router.get('/:id' , function () {
         var id = req.params.id,
-            query = app.findById(id);
+            query = app.findOne({ _id: id });
         common.dealJsonResponse(res, query);
     });
     // 更新
-    router.post('/:id' , function () { 
+    router.post('/:id' , function () {
         var id = req.params.id,
             data = req.body,
-            query = app.update(id, data);
+            query = app.updateOne({ _id: id }, data);
         common.dealJsonResponse(res, query);
     });
     // 删除
     router.delete('/:id' , function () {
         var id = req.params.id,
-            query = app.remove(id);
+            query = app.removeOne({ _id: id });
         common.dealJsonResponse(res, query);
     });
     return router;
