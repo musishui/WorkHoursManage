@@ -11,7 +11,7 @@ var api = require('./routes/api');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views/ractive'));
 app.set('view engine', 'html');
 app.engine('.html', require('ejs').__express);
 
@@ -26,11 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/lib', express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes);
-app.use('/api/login', api.login);
-app.use('/api/users', api.user);
-app.use('/api/projects', api.project);
-app.use('/api/worktypes', api.workType);
-app.use('/api/teams', api.team);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

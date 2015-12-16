@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div id="main"></div>
+    <script type="text/ractive" id="template">
+        <h1>项目列表</h1>
+        <ul>
+            {{#projects}}
+            <li>{{name}}</li>
+            {{else}}
+            暂无项目
+            {{/}}
+        </ul>
+        <h2>添加项目</h2>
+        {{#project}}
+        项目名称：
+        <input type="text" value="{{this.name}}" />
+        {{/}}
+        <input type="button" value="添加" on-click="add" />
+    </script>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src='/lib/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script>
+        var ractive = new Ractive({
+            el: '#main',
+            template: '#template',
+            data: {
+                projects: <%- JSON.stringify(items) %>,
+                project: { }
+            }
+        });
+        ractive.on({
+            add: function () {
+                var data = ractive.get();
+
+                $.post('/api/projects', data.project).then(
+                    function (result) {
+                        data.projects.push(data.project);
+                        ractive.set('project', {});
+                        console.log('success!');
+                        console.log(result);
+                    },
+                    function (err) {
+                        console.error(err);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>导出</title>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        #t1 {
+            width: 1200px;
+            table-layout: fixed;
+        }
+
+            #t1 th {
+                background: #948a54;
+                border: 1px solid #333;
+                vertical-align: middle;
+                padding: 0;
+            }
+
+            #t1 td {
+                border: 1px solid #333;
+                vertical-align: middle;
+                background: #d8e4bc;
+                padding: 0;
+                font-weight: bold;
+                color: #0070bf;
+            }
+
+        #t2 {
+            width: 1400px;
+            table-layout: fixed;
+        }
+
+            #t2 th {
+                background: #c5be97;
+                border: 1px solid #333;
+                vertical-align: middle;
+                padding: 0;
+                font-weight: normal;
+                height: 40px;
+            }
+
+            #t2 td {
+                border: 1px solid #333;
+                vertical-align: middle;
+                background: #fff;
+                color: #000;
+                min-height: 40px;
+                padding: 10px 2px;
+                font-size: 12px;
+            }
+
+            #t2 #t2_w {
+                padding: 0;
+                font-size: 14px;
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <script type="text/ractive" id="template">
+            <p>
+                当前工作日<input type="text" class="Wdate" id="currDate" onfocus="WdatePicker({ minDate: '#F{$dp.$D(\'prevDate\',{d:1});}', maxDate: '%y-%M-%d', onpicked: onWdatePicked })" value="{{currentDay}}" />
+                上个工作日<input type="text" class="Wdate" id="prevDate" onfocus="WdatePicker({ maxDate: '#F{$dp.$D(\'currDate\',{d:-1});}', onpicked: onWdatePicked })" value="{{prevDay}}" />
+                <a href="#" on-click="sendEmail">发送邮件</a>
+            </p>
+            <div class="table-responsive">
+                <table id='t1' class='table'>
+                    <thead>
+                        <tr>
+                            <th>合计</th>
+                            <th>项目管理</th>
+                            <th>用户需求</th>
+                            <th>软件需求</th>
+                            <th>概要设计</th>
+                            <th>详细设计</th>
+                            <th>编码实现</th>
+                            <th>缺陷修复</th>
+                            <th>代码评审</th>
+                            <th>代码重构</th>
+                            <th>测试计划</th>
+                            <th>测试用例设计</th>
+                            <th>测试执行</th>
+                            <th>版本发布及配置管理</th>
+                            <th>QA工作</th>
+                            <th>其它</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {{#summary}}
+                            <td>{{this['合计']}}</td>
+                            <td>{{this['项目管理']}}</td>
+                            <td>{{this['用户需求']}}</td>
+                            <td>{{this['软件需求']}}</td>
+                            <td>{{this['概要设计']}}</td>
+                            <td>{{this['详细设计']}}</td>
+                            <td>{{this['编码实现']}}</td>
+                            <td>{{this['缺陷修复']}}</td>
+                            <td>{{this['代码评审']}}</td>
+                            <td>{{this['代码重构']}}</td>
+                            <td>{{this['测试计划']}}</td>
+                            <td>{{this['测试用例设计']}}</td>
+                            <td>{{this['测试执行']}}</td>
+                            <td>{{this['版本发布及配置管理']}}</td>
+                            <td>{{this['QA工作']}}</td>
+                            <td>{{this['其它']}}</td>
+                            {{/}}
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <p style="border: 1px solid black; margin-bottom: 0; width: 1400px; border-bottom: none;">&emsp;日 期：{{currentDay}}&nbsp;&nbsp;&nbsp;&nbsp;	时间:  9:00 到  9: 20共  20分钟</p>
+                <table id='t2' class='table'>
+                    <thead>
+                        <tr>
+                            <th width="50px">序号</th>
+                            <th width="100px">成员</th>
+                            <th width="345px">昨日进度</th>
+                            <th width="100px">昨日投入工时</th>
+                            <th width="100px">昨日问题</th>
+                            <th width="320px">今日计划活动</th>
+                            <th width="80px">今日计划投入工时</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {{#details:key}}
+                            <td>{{@index+1}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                {{#prev.workItems:i}}
+                                {{i+1}}、{{content}} ({{progress}}%) -{{hours}}<br />
+                                {{/}}
+                            </td>
+                            <td>{{prev.workHours>8?('8 + '+ (prev.workHours-8)):prev.workHours}}</td>
+                            <td></td>
+                            <td>
+                                {{#curr.workItems:i}}
+                                {{i+1}}、{{content}} ({{progress}}%) -{{hours}}<br />
+                                {{/}}
+                            </td>
+                            <td>{{curr.workHours>8?('8 + '+curr.workHours-8):curr.workHours}}</td>
+                            <td>
+                                {{#if prev.levelHours>0}}
+                                昨日请假{{prev.levelHours<8?(prev.levelHours+'小时'):'一天'}}
+                                {{/if}}
+                                {{#if curr.levelHours>0}}
+                                今日请假{{curr.levelHours<8?(curr.levelHours+'小时'):'一天'}}
+                                {{/if}}
+                            </td>
+                            {{/}}
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </script>
+    </div>
+    
+
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script src="/My97DatePicker/WdatePicker.js"></script>
+    <script src="/js/ractive/common.js"></script>
+    <script src="/js/ractive/lodash.min.js"></script>
+    <script type="text/javascript">
+        var user = common.getStorage('user');
+        if (!user) {
+            // 登录
+        }
+
+        var currentDay = (new Date()).format(),
+            prevDate = (new Date().addDate(-1)).format(),
+
+            ractive = new Ractive({
+                el: '#main',
+                template: '#template',
+                data: {
+                    currentDay: currentDay,
+                    prevDay: prevDate,
+                    details: {},
+                    summary: {}
+                }
+            });
+
+        ractive.on({
+            sendEmail: function () {
+                var body = $('html').clone();
+                body.remove('#main p');
+                var url = "mailto:rxj@jusfoun.com?subject=今日工作&body=qqq" + encodeURI(body.html());
+                window.location.href = url;
+                console.log(url);
+            }
+        })
+
+        ractive.observe('currentDay', currDateChanged);
+
+        ractive.observe('prevDay', prevDateChanged);
+
+        currDateChanged(currentDay);
+        prevDateChanged(prevDate);
+
+        function getDetails(day) {
+            return $.get('/api/works', { start: day, end: day }).then(function (obj) {
+                if (obj.result == 0) {
+                    return obj.data;
+                }
+            });
+        }
+
+        function getSummary(day) {
+            return $.get('/api/statistics/work', { day: day }).then(function (obj) {
+                if (obj.result == 0) {
+                    return obj.data;
+                }
+            });
+        }
+
+        function onWdatePicked(event) {
+            var $el = $(event.el),
+                date = $el.val();
+            if ($el.is('#currDate')) {
+                ractive.set('currentDay', date);
+            } else {
+                ractive.set('prevDay', date);
+            }
+            console.log(arguments);
+        }
+
+        function currDateChanged(day) {
+            $.when(getDetails(day), initDetails()).then(function (data) {
+                var details = ractive.get('details');
+                var detailItems = buildDetails(data);
+                for (var k in details) {
+                    details[k].curr = detailItems[k] || {};
+                }
+                ractive.set('details', details);
+            });
+        }
+
+        function prevDateChanged(day) {
+            $.when(getSummary(day), common.getWorkTypes()).then(function (data, workTypes) {
+                var summary = createSummary();
+                data.forEach(function (wt) {
+                    var workType = _.find(workTypes, { _id: wt._id });
+                    if (workType && summary[workType.name] != undefined) {
+                        summary[workType.name] = wt.totalHours;
+                        summary['合计'] += wt.totalHours;
+                    }
+                });
+                ractive.set('summary', summary);
+            });
+            $.when(getDetails(day), initDetails()).then(function (data) {
+                var details = ractive.get('details');
+                var detailItems = buildDetails(data);
+                for (var k in details) {
+                    details[k].prev = detailItems[k] || {};
+                }
+                ractive.set('details', details);
+            });
+        }
+
+        function createSummary() {
+            return { '合计': 0, '项目管理': 0, '用户需求': 0, '软件需求': 0, '概要设计': 0, '详细设计': 0, '编码实现': 0, '缺陷修复': 0, '代码评审': 0, '代码重构': 0, '测试计划': 0, '测试用例设计': 0, '测试执行': 0, '版本发布及配置管理': 0, 'QA工作': 0, '其它': 0 };
+        }
+
+        function buildDetails(data) {
+            data = _.groupBy(data, function (item) {
+                return item.userId;
+            });
+            var details = {};
+            for (var k in data) {
+                var workHours = 0, leave = 0;
+
+                data[k].forEach(function (workItem) {
+                    if (workItem.workTypeId > 0) {
+                        workHours += workItem.hours;
+                    } else {
+                        leave += workItem.hours;
+                    }
+                });
+                details[k] = {
+                    workItems: data[k],
+                    workHours: workHours,
+                    leaveHours: leave
+                };
+            }
+            return details;
+        }
+
+        function initDetails() {
+            return common.getTeamMembers(user.teamId).then(function (members) {
+                var ms = {};
+                members.forEach(function (m) {
+                    ms[m._id] = { name: m.displayName };
+                });
+                var details = ractive.get('details');
+                details = $.extend(true, ms, details);
+                ractive.set('details', details);
+            });
+        }
+    </script>
+</body>
+</html>

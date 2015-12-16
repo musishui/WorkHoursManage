@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>注册</title>
+</head>
+<body>
+    <div id="main">
+        <script type="text/ractive" id="template">
+            用户名：
+            <input type="text" value="{{user.name}}" />
+            <br />
+            密码：
+            <input type="password" value="{{user.password}}" />
+            <br />
+            昵称：
+            <input type="text" value="{{user.displayName}}" />
+            <br />
+            <input type="button" value="注册" on-click="register" />
+            {{result}}
+        </script>
+
+    </div>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src='/lib/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script>
+        var ractive = new Ractive({
+            el: '#main',
+            template: '#template',
+            data: {
+                user: { teamId: '566fecde5c37a3782762930c' }
+            }
+        });
+        ractive.on({
+            register: function () {
+                var data = ractive.get();
+
+                $.post('/api/users', data.user).then(
+                    function (result) {
+                        ractive.set('result', result);
+                        console.log('success!');
+                        console.log(result);
+                    },
+                    function (err) {
+                        console.error(err);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -35,7 +35,8 @@ function EnumSchema() {
     BaseSchema.apply(this, arguments);
     var all;
     this.add({
-        name: { type: String }
+        name: { type: String },
+        index: { type: Number }
     });
     
     this.post('save', function (doc) {
@@ -86,6 +87,9 @@ var Team = new EnumSchema(),
         teamId: {
             type: Schema.Types.ObjectId,
             ref: 'team'
+        },
+        email: {
+            type: String
         }
     }),
     Project = new EnumSchema({
@@ -141,7 +145,7 @@ var Team = new EnumSchema(),
             type: Schema.Types.ObjectId,
             ref: 'project'
         },
-        workType: {
+        workTypeId: {
             type: Number,
             ref: 'workType'
         },

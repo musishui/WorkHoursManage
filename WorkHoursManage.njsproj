@@ -19,7 +19,7 @@
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
     <NodejsPort>1337</NodejsPort>
     <StartWebBrowser>true</StartWebBrowser>
   </PropertyGroup>
@@ -469,17 +469,24 @@
     <Compile Include="modules\team.js" />
     <Compile Include="modules\work.js" />
     <Compile Include="modules\workType.js" />
+    <Compile Include="public\js\directives.js" />
+    <Compile Include="public\js\ractive\common.js" />
+    <Compile Include="public\js\ractive\index.js" />
     <Compile Include="public\js\npm.js" />
-    <Compile Include="routes\baseAPI.js" />
+    <Compile Include="public\js\ractive\js.cookie.js" />
+    <Compile Include="public\js\ractive\lodash.min.js" />
+    <Compile Include="public\js\ractive\ractive.min.js" />
     <Compile Include="public\js\controller\login.js" />
     <Compile Include="public\js\controller\register.js" />
     <Compile Include="public\js\services.js" />
+    <Compile Include="public\My97DatePicker\calendar.js" />
+    <Compile Include="public\My97DatePicker\lang\en.js" />
+    <Compile Include="public\My97DatePicker\lang\zh-cn.js" />
+    <Compile Include="public\My97DatePicker\lang\zh-tw.js" />
+    <Compile Include="public\My97DatePicker\WdatePicker.js" />
     <Compile Include="routes\api.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="bin\www" />
-    <Compile Include="routes\projectAPI.js" />
-    <Compile Include="routes\userAPI.js" />
-    <Compile Include="routes\workType.js" />
     <Compile Include="settings.js" />
     <Compile Include="modules\user.js" />
     <Content Include="bower.json" />
@@ -646,12 +653,27 @@
     <Content Include="bower_components\moment\CHANGELOG.md" />
     <Content Include="bower_components\moment\README.md" />
     <Content Include="package.json" />
+    <Content Include="public\css\reset.css" />
+    <Content Include="public\My97DatePicker\skin\datePicker.gif" />
+    <Content Include="public\My97DatePicker\skin\default\datepicker.css" />
+    <Content Include="public\My97DatePicker\skin\default\img.gif" />
+    <Content Include="public\My97DatePicker\skin\WdatePicker.css" />
+    <Content Include="public\My97DatePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="public\My97DatePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="public\My97DatePicker\skin\whyGreen\img.gif" />
+    <Content Include="views\ractive\export.html" />
     <Content Include="README.md" />
     <Content Include="views\index.html" />
     <Content Include="views\login.html" />
+    <Content Include="views\ractive\index.html" />
+    <Content Include="views\ractive\register_new.html" />
+    <Content Include="views\ractive\login.html" />
+    <Content Include="views\ractive\register.html" />
+    <Content Include="views\ractive\team.html" />
+    <Content Include="views\ractive\project.html" />
     <Content Include="views\register.html" />
     <Content Include="views\workHours.html" />
-    <Content Include="views\workType.html" />
+    <Content Include="views\ractive\workType.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
@@ -720,8 +742,15 @@
     <Folder Include="public\js\controller\" />
     <Folder Include="public\js\" />
     <Folder Include="public\css\" />
+    <Folder Include="public\js\ractive\" />
+    <Folder Include="public\My97DatePicker\" />
+    <Folder Include="public\My97DatePicker\lang\" />
+    <Folder Include="public\My97DatePicker\skin\" />
+    <Folder Include="public\My97DatePicker\skin\default\" />
+    <Folder Include="public\My97DatePicker\skin\whyGreen\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
+    <Folder Include="views\ractive\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

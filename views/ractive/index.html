@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>我的日历</title>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <script src='/lib/moment/min/moment.min.js'></script>
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src='/lib/fullcalendar/dist/fullcalendar.min.js'></script>
+    <script src='/lib/fullcalendar/dist/lang-all.js'></script>
+    <script src='/lib/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script src="/js/ractive/common.js"></script>
+    <script src="/js/ractive/js.cookie.js"></script>
+    <script src="/js/ractive/index.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            font-size: 14px;
+        }
+
+        #top {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            padding: 0 10px;
+            line-height: 40px;
+            font-size: 12px;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        .eventOver {
+            background: #b33;
+        }
+
+        .event-cls {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            text-align: center;
+            right: 0px;
+            line-height: 15px;
+            top: 0;
+            background: #c33;
+            font-size: 12px;
+            transition: all .3s;
+            z-index: 1000;
+        }
+
+            .event-cls:hover {
+                transform: rotate(90deg);
+            }
+    </style>
+</head>
+<body>
+
+    <div id='top'>
+        <a href="/register">注册</a>
+        <a href="/login">登录</a>
+
+    </div>
+
+    <div id='calendar'></div>
+
+    <div class="modal fade" id="workItemModal" tabindex="-1" role="dialog" aria-labelledby="workItemModal">
+        <script type="text/ractive" id="workItemTemplate">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">工时编辑</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" style="padding-right:40px;">
+                            <div class="form-group">
+                                <label for="selProject" class="col-sm-2 control-label">项目</label>
+                                <div class="col-sm-10">
+                                    <select id="selProject" class="form-control" value="{{workItem.projectId}}">
+                                        {{#projects}}
+                                        <option value="{{_id}}">{{name}}</option>
+                                        {{/}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="txtContent" class="col-sm-2 control-label">内容</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="txtContent" placeholder="工作内容" value="{{workItem.content}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="selWorkType" class="col-sm-2 control-label">工作性质</label>
+                                <div class="col-sm-10">
+                                    <select id="selWorkType" class="form-control" value="{{workItem.workTypeId}}">
+                                        {{#workTypes}}
+                                        <option value="{{_id}}">{{name}}</option>
+                                        {{/}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="numHours" class="col-sm-2 control-label">工时</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="numHours" aria-label="工时(H)" placeholder="工时(H)" value="{{workItem.hours}}">
+                                        <span class="input-group-addon">H</span>
+                                    </div>
+                                </div>
+                                <label for="numProgress" class="col-sm-2 control-label">进度</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="numProgress" aria-label="进度%" placeholder="进度(%)" value="{{workItem.progress}}">
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="padding-right:50px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id='btnOk' type="button" class="btn btn-primary" on-click="save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </script>
+        
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal">
+        <script type="text/ractive" id="loginTemplate">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">登录</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" style="padding-right:40px;">
+                            <div class="form-group">
+                                <label for="loginName" class="col-sm-2 control-label">用户名</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="loginName" placeholder="用户名" value="{{user.name}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail3" class="col-sm-2 control-label">密码</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="loginPwd" placeholder="密码" value="{{user.password}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" checked="{{rememberPwd}}"> 记住密码
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer" style="padding-right:50px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id='btnOk' type="button" class="btn btn-primary" on-click="login">登录</button>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </div>
+
+</body>
+</html>

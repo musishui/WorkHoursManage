@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <link href='/css/reset.css' rel='stylesheet' />
+    <style type="text/css">
+        .login-box {
+            width: 500px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin: -350px -250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="main">        
+    </div>
+    <script type="text/ractive" id="template">
+        <div class="panel panel-default login-box">
+            <div class="panel-heading"><h3>个人基本信息</h3></div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-user"></span></span>
+                                <input type="text" class="form-control" placeholder="姓名" required="required" value="{{user.displayName}}" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-envelope"></span></span>
+                                <input type="email" class="form-control" placeholder="邮箱" required="required" value="{{user.email}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="fa fa-group"></span></span>
+                                <select class="form-control" value="{{user.teamId}}">
+                                    <option value="566fecde5c37a3782762930c">Web 前端组</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-heading"><h3>账号信息</h3></div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                <input type="text" class="form-control" placeholder="用户名" required="required" value="{{user.name}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                <input type="text" class="form-control" placeholder="密码" required="required" value="{{user.password}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                <input type="text" class="form-control" placeholder="确认密码" required="required" value="{{password}}">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" on-click="login">注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</button>
+                </form>
+            </div>
+        </div>
+    </script>
+
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script>
+        var ractive = new Ractive({
+            el: '#main',
+            template: '#template'
+        });
+        ractive.on({
+            login: function () {
+                var user = ractive.get('user');
+                if (!validateData(user)) return;
+                $.post('/api/users', user).then(
+                    function (result) {
+                        ractive.set('result', result);
+                        console.log('success!');
+                        console.log(result);
+                        location.href = '/login';
+                    },
+                    function (err) {
+                        console.error(err);
+                    });
+            },
+            focus: function (event, keyPath) {
+                ractive.set(keyPath, false);
+            }
+        });
+
+        function validateData(user) {
+            var result = true;
+            $('input.form-control').each(function () {
+                if (!this.checkValidity()) {
+                    result = false;
+                    var $this = $(this);
+                    $this.addClass('error').one('focus', function () {
+                        $this.removeClass('error');
+                    });
+                }
+            });
+            return result;
+        }
+    </script>
+</body>
+
+</html>
