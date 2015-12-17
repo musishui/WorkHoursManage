@@ -1,24 +1,5 @@
 ﻿$(document).ready(function () {
-    var uid = '803d4de2-afa1-4f92-b51e-b7d602fb33cc';
-    var loginRactive = new Ractive({
-        el: '#loginModal',
-        template: '#loginTemplate'
-    });
-    loginRactive.on({
-        login: function () {
-            var data = loginRactive.get();
-            login(data.user, data.rememberPwd).then(function (obj) {
-                if (obj.result == 0) {
-                    $('#loginModal').modal('hide');
-                } else if (obj.result == 1) {
-                    alert('用户名或密码错误');
-                } else {
-                    alert('系统异常');
-                }
-            });
-        }
-    });
-    
+    var user = common.getCurrUser();
     var workItemRactive = new Ractive({
         el: '#workItemModal',
         template: '#workItemTemplate',
@@ -31,26 +12,21 @@
             var workItem = workItemRactive.get('workItem');
             $.post('/api/works/' + (workItem._id || ''), workItem).then(
                 function (obj) {
+
+                    workItemRactive.set('workItem.content', '');
                     if (obj.result == 0) {
                         updateCalendar(obj.data);
+                    }
+                    if (workItem._id) {
+                        $('#workItemModal').modal('hide');
                     }
                 }, 
                 function (err) {
                     console.log(err);
                 })
         }
-    })
-    
-    var user = Cookies.get(uid);
-    if (user) {
-        user = JSON.parse(user);
-    }
-    $.when(!user || login(user)).then(function () {
-        if (!user) {
-            $('#loginModal').modal('show');
-        }
     });
-    
+
     common.getProjects().then(function (projects) {
         workItemRactive.set('projects', projects);
     });
@@ -58,35 +34,8 @@
         workItemRactive.set('workTypes', workTypes);
     });
     
-    function login(u, rememberPwd) {
-        return $.get('/api/login', u).then(function (obj) {
-            if (obj.result == 0) {
-                // 记住密码
-                user = obj.data;
-                renderCalendar();
-                return { result: 0 };
-            } else {
-                user = null;
-                return { result: 1 };
-            }
+    renderCalendar();
 
-        }, function (err) {
-            console.log(err);
-            return { result: 2 };
-        }).always(function (obj) {
-            if (obj.result == 0 && rememberPwd !== false) {
-                Cookies.set(uid, u);
-            } else {
-                Cookies.remove(uid);
-            }
-            if (obj.result == 0) {
-                common.setStorage('user', user);
-            } else {
-                common.removeStorage('user', user);
-            }
-        });
-    }
-    
     function renderCalendar() {
         $('#calendar').fullCalendar({
             header: {
@@ -192,3 +141,6 @@
     }
 
 });
+function logout() { 
+    common.logout();
+}

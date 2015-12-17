@@ -52,6 +52,11 @@
                 min-height: 40px;
                 padding: 10px 2px;
                 font-size: 12px;
+                text-align: center;
+            }
+
+            #t2 .text-left {
+                text-align: left;
             }
 
             #t2 #t2_w {
@@ -65,9 +70,9 @@
     <div id="main">
         <script type="text/ractive" id="template">
             <p>
-                当前工作日<input type="text" class="Wdate" id="currDate" onfocus="WdatePicker({ minDate: '#F{$dp.$D(\'prevDate\',{d:1});}', maxDate: '%y-%M-%d', onpicked: onWdatePicked })" value="{{currentDay}}" />
+                当前工作日<input type="text" class="Wdate" id="currDate" onfocus="WdatePicker({ minDate: '#F{$dp.$D(\'prevDate\',{d:1});}', maxDate: '%y-%M-{%d+1}', onpicked: onWdatePicked })" value="{{currentDay}}" />
                 上个工作日<input type="text" class="Wdate" id="prevDate" onfocus="WdatePicker({ maxDate: '#F{$dp.$D(\'currDate\',{d:-1});}', onpicked: onWdatePicked })" value="{{prevDay}}" />
-                <a href="#" on-click="sendEmail">发送邮件</a>
+                <a href="#" on-click="sendEmail:{{prevDay}}">发送邮件</a>
             </p>
             <div class="table-responsive">
                 <table id='t1' class='table'>
@@ -131,24 +136,24 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{#details:key}}
                         <tr>
-                            {{#details:key}}
                             <td>{{@index+1}}</td>
                             <td>{{name}}</td>
-                            <td>
+                            <td class="text-left">
                                 {{#prev.workItems:i}}
                                 {{i+1}}、{{content}} ({{progress}}%) -{{hours}}<br />
                                 {{/}}
                             </td>
                             <td>{{prev.workHours>8?('8 + '+ (prev.workHours-8)):prev.workHours}}</td>
                             <td></td>
-                            <td>
+                            <td class="text-left">
                                 {{#curr.workItems:i}}
                                 {{i+1}}、{{content}} ({{progress}}%) -{{hours}}<br />
                                 {{/}}
                             </td>
                             <td>{{curr.workHours>8?('8 + '+curr.workHours-8):curr.workHours}}</td>
-                            <td>
+                            <td class="text-left">
                                 {{#if prev.levelHours>0}}
                                 昨日请假{{prev.levelHours<8?(prev.levelHours+'小时'):'一天'}}
                                 {{/if}}
@@ -156,26 +161,24 @@
                                 今日请假{{curr.levelHours<8?(curr.levelHours+'小时'):'一天'}}
                                 {{/if}}
                             </td>
-                            {{/}}
                         </tr>
+                        {{/}}
                     </tbody>
                 </table>
 
             </div>
         </script>
     </div>
-    
+
 
     <script src='/lib/jquery/dist/jquery.min.js'></script>
     <script src="/js/ractive/ractive.min.js"></script>
     <script src="/My97DatePicker/WdatePicker.js"></script>
+    <script src="/js/ractive/js.cookie.js"></script>
     <script src="/js/ractive/common.js"></script>
     <script src="/js/ractive/lodash.min.js"></script>
     <script type="text/javascript">
-        var user = common.getStorage('user');
-        if (!user) {
-            // 登录
-        }
+        var user = common.getCurrUser();
 
         var currentDay = (new Date()).format(),
             prevDate = (new Date().addDate(-1)).format(),
@@ -192,10 +195,23 @@
             });
 
         ractive.on({
-            sendEmail: function () {
+            sendEmail: function (event, date) {
                 var body = $('html').clone();
                 body.remove('#main p');
-                var url = "mailto:rxj@jusfoun.com?subject=今日工作&body=qqq" + encodeURI(body.html());
+                var to = [
+                    'tyg@jusfoun.com',
+                    'pwk@jusfoun.com',
+                    'rxj@jusfoun.com',
+                    'limeng@jusfoun.com',
+                    'whp@jusfoun.com',
+                    'hrx@jusfoun.com',
+                    'ghm@jusfoun.com',
+                    'yqq@jusfoun.com'
+                ].join(';'),
+                    cc = [
+                        'zhangyj@jusfoun.com',
+                        'zjq@jusfoun.com'].join(';'),
+                    url = "mailto:" + to + "?subject=前端组" + date + "晨会内容&cc=" + cc;
                 window.location.href = url;
                 console.log(url);
             }
@@ -269,7 +285,24 @@
         }
 
         function createSummary() {
-            return { '合计': 0, '项目管理': 0, '用户需求': 0, '软件需求': 0, '概要设计': 0, '详细设计': 0, '编码实现': 0, '缺陷修复': 0, '代码评审': 0, '代码重构': 0, '测试计划': 0, '测试用例设计': 0, '测试执行': 0, '版本发布及配置管理': 0, 'QA工作': 0, '其它': 0 };
+            return {
+                '合计': 962,
+                '项目管理': 0,
+                '用户需求': 0,
+                '软件需求': 21,
+                '概要设计': 0,
+                '详细设计': 0,
+                '编码实现': 593,
+                '缺陷修复': 243,
+                '代码评审': 4,
+                '代码重构': 4,
+                '测试计划': 0,
+                '测试用例设计': 0,
+                '测试执行': 0,
+                '版本发布及配置管理': 2,
+                'QA工作': 0,
+                '其它': 95
+            };
         }
 
         function buildDetails(data) {

@@ -5,7 +5,7 @@
 baseBLL.statistics = function (day) {
     var deferred = Q.defer(),
         query = Work.aggregate(
-            { $match: { workday: { '$lte': new Date('2015-12-15T00:00:00') } } }, 
+            { $match: { workday: { '$lte': new Date(day)/*new Date(day + 'T00:00:00')*/ } } }, 
             { $group: { _id: '$workTypeId', totalHours: { $sum: '$hours' } } },
             function (err, res) {
                 if (err) {
@@ -14,6 +14,7 @@ baseBLL.statistics = function (day) {
                     deferred.resolve(res);
                 }
             });
+    
     return deferred.promise;
 }
 module.exports = baseBLL;

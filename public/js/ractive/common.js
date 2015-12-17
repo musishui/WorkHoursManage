@@ -44,6 +44,8 @@ var common = (function () {
         var data = storage.removeItem(key);
     }
     
+    var uid = '803d4de2-afa1-4f92-b51e-b7d602fb33cc';
+    
     return {
         getProjects: function () {
             var projects = getStorageItem('projects');
@@ -77,30 +79,54 @@ var common = (function () {
                 }
             }));
         },
-        login: function (user){
-            var uid = '803d4de2-afa1-4f92-b51e-b7d602fb33cc';
-            return $.get('/api/login', user).then(function (obj) {
-                if (obj.result == 0) {
-                    // 设置Cookie
-                    Cookies.set(uid, obj.data);
-                    //
-                    common.setStorage('user', user);
-                    return { result: 0, user: obj.data };
-                } else {
-                    user = null;
-                    return { result: 1 };
-                }
-
-            }, function (err) {
-                console.log(err);
-                return { result: 2 };
-            });
+        login: function (user) {
+            var result;
+            if (user) {
+                $.ajax({
+                    url: '/api/login',
+                    data: user,
+                    dataType: 'json',
+                    async: false,
+                    success: function (obj) {
+                        if (obj.result == 0 && obj.data) {
+                            result = obj.data;
+                        }
+                    }
+                });
+            }
+            if (result) {
+                Cookies.set(uid, user, { expires: 30 });
+                common.setStorage('user', result)
+            } else {
+                Cookies.remove(uid);
+                common.removeStorage('user');
+            }
+            return result;
+        },
+        logout: function (user) {
+            Cookies.remove(uid);
+            common.removeStorage('user');
+            location.href = '/login';
         },
         getCurrUser: function () {
             var user = common.getStorage('user');
             if (!user) {
-
+                user = Cookies.get(uid);
+                if (user) {
+                    user = JSON.parse(user);
+                    user = common.login(user);
+                }
             }
+            if (user) {
+                return user;
+            } else {
+                location.href = '/login?to=' + location.href;
+            }
+        },
+        getQueryString: function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
         }
     }
 }());

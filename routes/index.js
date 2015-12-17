@@ -20,7 +20,7 @@ router.get('/login', function (req, res) {
 });
 
 router.get('/register', function (req, res) {
-    res.render('register_new');
+    res.render('register');
 });
 
 router.get('/worktype', function (req, res) {

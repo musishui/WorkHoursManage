@@ -666,9 +666,8 @@
     <Content Include="views\index.html" />
     <Content Include="views\login.html" />
     <Content Include="views\ractive\index.html" />
-    <Content Include="views\ractive\register_new.html" />
-    <Content Include="views\ractive\login.html" />
     <Content Include="views\ractive\register.html" />
+    <Content Include="views\ractive\login.html" />
     <Content Include="views\ractive\team.html" />
     <Content Include="views\ractive\project.html" />
     <Content Include="views\register.html" />

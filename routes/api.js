@@ -86,7 +86,7 @@ buildRoute({
         'get': {
             '/': function (req, res) {
                 var params = req.query;
-                var query = work.statistics('2015-12-15T00:00:00');
+                var query = work.statistics(params.day);
                 common.dealJsonResponse(res, query);
             }
         }
