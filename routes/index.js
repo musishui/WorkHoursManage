@@ -10,6 +10,9 @@ var router = express.Router();
 router.get('/', function (req, res) {
     res.render('index', { title: 'Express' });
 });
+router.get('/index_new', function (req, res) {
+    res.render('index_new', { title: 'Express' });
+});
 
 router.get('/export', function (req, res) {
     res.render('export', { title: 'Express' });

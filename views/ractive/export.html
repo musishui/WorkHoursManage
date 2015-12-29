@@ -70,7 +70,7 @@
     <div id="main">
         <script type="text/ractive" id="template">
             <p>
-                当前工作日<input type="text" class="Wdate" id="currDate" onfocus="WdatePicker({ minDate: '#F{$dp.$D(\'prevDate\',{d:1});}', maxDate: '%y-%M-{%d+1}', onpicked: onWdatePicked })" value="{{currentDay}}" />
+                当前工作日<input type="text" class="Wdate" id="currDate" onfocus="WdatePicker({ minDate: '#F{$dp.$D(\'prevDate\',{d:1});}', onpicked: onWdatePicked })" value="{{currentDay}}" />
                 上个工作日<input type="text" class="Wdate" id="prevDate" onfocus="WdatePicker({ maxDate: '#F{$dp.$D(\'currDate\',{d:-1});}', onpicked: onWdatePicked })" value="{{prevDay}}" />
                 <a href="#" on-click="sendEmail:{{prevDay}}">发送邮件</a>
             </p>
@@ -178,21 +178,35 @@
     <script src="/js/ractive/common.js"></script>
     <script src="/js/ractive/lodash.min.js"></script>
     <script type="text/javascript">
-        var user = common.getCurrUser();
+        var user = common.getCurrUser(),
+            currentDay = new Date(),
+            prevDate = currentDay.addDate(-1),
+            hours = currentDay.getHours();
+        if (hours > 16) {
+            prevDate = currentDay;
+            currentDay = currentDay.addDate(1);
+        }
+        var day = (currentDay.getDay() + 1) % 7;
+        if (day < 2) {
+            currentDay = currentDay.addDate(2 - day);
+        }
+        day = (prevDate.getDay() + 1) % 7;
+        if (day < 2) {
+            prevDate = prevDate.addDate(-(day + 1));
+        }
+        currentDay = currentDay.format();
+        prevDate = prevDate.format();
 
-        var currentDay = (new Date()).format(),
-            prevDate = (new Date().addDate(-1)).format(),
-
-            ractive = new Ractive({
-                el: '#main',
-                template: '#template',
-                data: {
-                    currentDay: currentDay,
-                    prevDay: prevDate,
-                    details: {},
-                    summary: {}
-                }
-            });
+        ractive = new Ractive({
+            el: '#main',
+            template: '#template',
+            data: {
+                currentDay: currentDay,
+                prevDay: prevDate,
+                details: {},
+                summary: {}
+            }
+        });
 
         ractive.on({
             sendEmail: function (event, date) {

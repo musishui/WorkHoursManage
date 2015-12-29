@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>我的日历</title>
+    <link href='/lib/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet' />
+    <link href='/lib/font-awesome/css/font-awesome.min.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.css' rel='stylesheet' />
+    <link href='/lib/fullcalendar/dist/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <link href="/css/reset.css" rel="stylesheet" />
+    <link href="/css/index.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div id='top'>
+        <a href="/register">注册</a>
+        <a href="#" onclick="logout()">注销</a>
+        <a href="/export">统计</a>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9">
+                <div id='calendar'></div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-default" style="margin-top:90px;" id="workItems">
+                    <script type="text/ractive" id="workItemTemplate">
+                        <div class="panel-heading">2015-12-30</div>
+                        <div class="panel-body">
+                            <ol class="rounded-list">
+                                <li><a href="javascript:">pc终端详情开发 (100%) -5</a></li>
+                                {{#workItems:wi}}
+                                <li><a href="#">{{content}}</a></li>
+                                {{/}}
+                                <li><a href="javascript:" style="color:blue; text-decoration:underline;">点击添加新工作项</a></li>
+                            </ol>
+                            <hr />
+                            <form id="frmWorkItem">
+                                <div class="form-group">
+                                    <label for="selProject">项目</label>
+                                    <input type="text" class="form-control" id="selProject" placeholder="项目" required="required" real-value="{{workItem.projectId}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="txtContent">内容</label>
+                                    <input type="text" class="form-control" id="txtContent" placeholder="工作内容" value="{{workItem.content}}" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <label for="selWorkType1">工作性质</label>
+                                    <input type="text" class="form-control" id="selWorkType" placeholder="工作性质" required="required" real-value="{{workItem.workTypeId}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="numHours">工时</label>
+                                    <div class="addon" data-flag="H">
+                                        <input type="text" class="form-control" id="numHours" aria-label="工时(H)" placeholder="工时(H)" value="{{workItem.hours}}" required="required" pattern="1[0-6]|[1-9]">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="numProgress">进度</label>
+                                    <div class="addon" data-flag="%">
+                                        <input type="text" class="form-control" id="numProgress" aria-label="进度%" placeholder="进度(%)" value="{{workItem.progress}}" required="required" pattern="100|[1-9]\d?">
+                                    </div>
+                                </div>
+                                <input type="button" class="btn btn-primary btn-lg btn-block" value="保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存" on-click="save">
+                            </form>
+                        </div>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='/lib/moment/min/moment.min.js'></script>
+    <script src='/lib/jquery/dist/jquery.min.js'></script>
+    <script src='/lib/fullcalendar/dist/fullcalendar.min.js'></script>
+    <script src='/lib/fullcalendar/dist/lang-all.js'></script>
+    <script src='/lib/bootstrap/dist/js/bootstrap.min.js'></script>
+    <script src='/lib/lodash/lodash.min.js'></script>
+    <script src="/js/ractive/ractive.min.js"></script>
+    <script src="/js/ractive/common.js"></script>
+    <script src="/js/ractive/js.cookie.js"></script>
+    <script src="/js/ractive/bootstrap.autocomplete.js"></script>
+    <script src="/js/ractive/py.js"></script>
+    <script src="/js/ractive/index_new.js"></script>
+</body>
+</html>

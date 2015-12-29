@@ -19,7 +19,7 @@
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <NodejsPort>1337</NodejsPort>
     <StartWebBrowser>true</StartWebBrowser>
   </PropertyGroup>
@@ -190,6 +190,9 @@
     <Compile Include="bower_components\jquery\src\var\support.js" />
     <Compile Include="bower_components\jquery\src\var\toString.js" />
     <Compile Include="bower_components\jquery\src\wrap.js" />
+    <Compile Include="bower_components\lodash\LICENSE" />
+    <Compile Include="bower_components\lodash\lodash.js" />
+    <Compile Include="bower_components\lodash\lodash.min.js" />
     <Compile Include="bower_components\moment\LICENSE" />
     <Compile Include="bower_components\moment\locale\af.js" />
     <Compile Include="bower_components\moment\locale\ar-ma.js" />
@@ -461,6 +464,7 @@
     <Compile Include="bower_components\moment\templates\globals.js" />
     <Compile Include="bower_components\moment\templates\locale-header.js" />
     <Compile Include="bower_components\moment\templates\test-header.js" />
+    <Compile Include="install.js" />
     <Compile Include="lib\common.js" />
     <Compile Include="modules\dbHelper.js" />
     <Compile Include="modules\modules.js" />
@@ -470,11 +474,14 @@
     <Compile Include="modules\work.js" />
     <Compile Include="modules\workType.js" />
     <Compile Include="public\js\directives.js" />
+    <Compile Include="public\js\ractive\bootstrap.autocomplete.js" />
     <Compile Include="public\js\ractive\common.js" />
+    <Compile Include="public\js\ractive\index_new.js" />
     <Compile Include="public\js\ractive\index.js" />
     <Compile Include="public\js\npm.js" />
     <Compile Include="public\js\ractive\js.cookie.js" />
     <Compile Include="public\js\ractive\lodash.min.js" />
+    <Compile Include="public\js\ractive\py.js" />
     <Compile Include="public\js\ractive\ractive.min.js" />
     <Compile Include="public\js\controller\login.js" />
     <Compile Include="public\js\controller\register.js" />
@@ -489,6 +496,7 @@
     <Compile Include="bin\www" />
     <Compile Include="settings.js" />
     <Compile Include="modules\user.js" />
+    <Compile Include="uninstall.js" />
     <Content Include="bower.json" />
     <Content Include="bower_components\bootstrap\.bower.json" />
     <Content Include="bower_components\bootstrap\bower.json" />
@@ -648,12 +656,16 @@
     <Content Include="bower_components\jquery\dist\jquery.min.map" />
     <Content Include="bower_components\jquery\MIT-LICENSE.txt" />
     <Content Include="bower_components\jquery\src\sizzle\dist\sizzle.min.map" />
+    <Content Include="bower_components\lodash\.bower.json" />
+    <Content Include="bower_components\lodash\bower.json" />
     <Content Include="bower_components\moment\.bower.json" />
     <Content Include="bower_components\moment\bower.json" />
     <Content Include="bower_components\moment\CHANGELOG.md" />
     <Content Include="bower_components\moment\README.md" />
     <Content Include="package.json" />
-    <Content Include="public\css\reset.css" />
+    <Content Include="public\css\index.css" />
+    <Content Include="public\css\reset_1.css" />
+    <Content Include="public\css\reset.less" />
     <Content Include="public\My97DatePicker\skin\datePicker.gif" />
     <Content Include="public\My97DatePicker\skin\default\datepicker.css" />
     <Content Include="public\My97DatePicker\skin\default\img.gif" />
@@ -665,6 +677,7 @@
     <Content Include="README.md" />
     <Content Include="views\index.html" />
     <Content Include="views\login.html" />
+    <Content Include="views\ractive\index_New.html" />
     <Content Include="views\ractive\index.html" />
     <Content Include="views\ractive\register.html" />
     <Content Include="views\ractive\login.html" />
@@ -719,6 +732,7 @@
     <Folder Include="bower_components\jquery\src\traversing\" />
     <Folder Include="bower_components\jquery\src\traversing\var\" />
     <Folder Include="bower_components\jquery\src\var\" />
+    <Folder Include="bower_components\lodash\" />
     <Folder Include="bower_components\moment\" />
     <Folder Include="bower_components\moment\locale\" />
     <Folder Include="bower_components\moment\min\" />

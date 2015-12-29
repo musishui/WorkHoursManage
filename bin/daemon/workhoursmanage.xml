@@ -1,0 +1,1 @@
+<service><id>workhoursmanage.exe</id><name>WorkHours Manage</name><description>工时管理系统</description><executable>C:\Program Files\nodejs\node.exe</executable><arguments>--harmony "E:\git\WorkHoursManage\node_modules\node-windows\lib\wrapper.js" -f "E:\git\WorkHoursManage\bin\www" -l "WorkHours Manage" -g 0.25 -w 1 -r 3 -a n</arguments><logmode>rotate</logmode></service>
