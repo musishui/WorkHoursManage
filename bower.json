@@ -17,6 +17,9 @@
   ],
   "dependencies": {
     "fullcalendar": "~2.5.0",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "fontawesome#~4.5.0"
   }
 }
